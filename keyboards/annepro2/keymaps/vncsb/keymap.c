@@ -35,6 +35,10 @@ enum LAYERS {
     LAYER_SELECT,
 };
 
+enum custom_keycodes {
+    BOTH_CTRL = SAFE_RANGE,
+};
+
 // clang-format off
 // Key symbols are based on QMK. Use them to remap your keyboard
 /*
@@ -87,7 +91,7 @@ enum LAYERS {
 ),
  [LAYER_SELECT] = LAYOUT_60_ansi(
     _______, _______, _______, _______, _______, _______, _______, _______,      _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______,      _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, BOTH_CTRL,      _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, TG(HOME_MOD), TG(UTILS), _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______,      _______, _______, _______, _______,
     _______, _______, _______,                            _______,                   _______, _______, _______, _______
@@ -148,4 +152,19 @@ bool led_update_user(led_t leds) {
     }
 
     return true;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case BOTH_CTRL:
+      if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_RCTL);
+      } else {
+        unregister_code(KC_LCTL);
+        unregister_code(KC_RCTL);
+      }
+      break;
+  }
+  return true;
 }
